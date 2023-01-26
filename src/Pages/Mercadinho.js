@@ -1,39 +1,38 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { handleCart} from "../Router/cordinator";
+import { handleCadastro, handleCart } from "../Router/cordinator";
 import CardFrutas from "../components/CardFrutas";
-import frutaria from "../frutaria.json";
 import styled from "styled-components";
+import { GlobalContext } from "../contexts/GlobalContext";
 
-export default function Mercadinho(props) {
-    const [frutas, setFrutas] = useState(frutaria.frutaria);
-    const navigate = useNavigate();
+export default function Mercadinho() {
+  const navigate = useNavigate();
+  const context = useContext(GlobalContext);
+  const { frutas, comprar } = context;
 
-    function comprar(id) {
-        // const i = carrinho.findIndex((item) => item.id === id);
-        // console.log(i);
-        // if (i !== -1) {
-        //   carrinho[i] = { ...carrinho[i], amount: carrinho[i].amount + 1 };
-        // } else {
-        //   const frutaEncontrada = frutas.find((fruta) => fruta.id === id);
-        //   const novaFruta = { ...frutaEncontrada, amount: 1 };
-        //   const novaLista = [...carrinho, (carrinho[1] = novaFruta)];
-
-        //   setCarrinho(novaLista);
-    }
-
-
-
-return (
+  return (
     <MercadinhoContainer>
-        <h1>Mercadinho</h1>
-        <button onClick={() => handleCart(navigate)}>Vá para Carrinho </button>
-        <button>Cadastro de Frutas </button>
-        <FrutasContainer>
-            <CardFrutas />
-        </FrutasContainer>
+      <h1>Mercadinho</h1>
+      <button onClick={() => handleCart(navigate)}>Vá para Carrinho </button>
+      <button onClick={() => handleCadastro(navigate)}>
+        Cadastro de Frutas{" "}
+      </button>
+      <FrutasContainer>
+        {frutas.map((fruta) => {
+          return (
+            <CardFrutas
+              comprar={comprar}
+              key={fruta.id}
+              id={fruta.id}
+              img={fruta.url}
+              name={fruta.name}
+              price={fruta.price}
+            />
+          );
+        })}
+      </FrutasContainer>
     </MercadinhoContainer>
-);
+  );
 }
 const FrutasContainer = styled.section`
   display: flex;
